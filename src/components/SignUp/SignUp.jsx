@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-const Login = () => {
+const SignUp = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  //   const { createUser } = useContext(AuthContext);
 
   const handleNameChange = (event) => {
     setName(event.target.value);
@@ -27,13 +27,25 @@ const Login = () => {
   };
 
   return (
-    <div className='flex justify-center items-center  h-screen w-screen'>
+    <div className='flex justify-center items-center h-screen w-screen'>
       <form
         onSubmit={handleSubmit}
         className='bg-white p-20 px-28 rounded-lg shadow-md shadow-slate-300'
       >
-        <h2 className='text-2xl font-extrabold text-gray-800 mb-6'>Log In</h2>
-
+        <h2 className='text-2xl font-extrabold text-gray-800 mb-6'>Sign Up</h2>
+        <div className='mb-4'>
+          <label htmlFor='name' className='block text-gray-700 font-bold mb-2'>
+            Name
+          </label>
+          <input
+            type='text'
+            name='name'
+            id='name'
+            className='w-full border rounded-lg py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+            value={name}
+            onChange={handleNameChange}
+          />
+        </div>
         <div className='mb-4'>
           <label htmlFor='email' className='block text-gray-700 font-bold mb-2'>
             Email
@@ -65,15 +77,15 @@ const Login = () => {
         </div>
         <button
           type='submit'
-          className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-3 px-4 w-full rounded focus:outline-none focus:shadow-outline'
+          className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-3 px-4 rounded focus:outline-none focus:shadow-outline w-full'
         >
-          Login
+          Signup
         </button>
         <br />
         <span className='text-xl '>
-          New here?{" "}
-          <Link to='/signup' className='text-blue-500'>
-            Signup
+          already have an account?{" "}
+          <Link to='/login' className='text-blue-500'>
+            Login
           </Link>
         </span>
         <br />
@@ -88,4 +100,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignUp;
