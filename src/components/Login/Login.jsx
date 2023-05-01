@@ -1,14 +1,13 @@
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
 const Login = () => {
+  // Validation With React Hook Form
+  const { register, handleSubmit, error } = useForm();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  //   const { createUser } = useContext(AuthContext);
-
-  const handleNameChange = (event) => {
-    setName(event.target.value);
-  };
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -18,9 +17,7 @@ const Login = () => {
     setPassword(event.target.value);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(`Email: ${email}, Password: ${password}`);
+  const handleSubmitForm = (data) => {
     setName("");
     setEmail("");
     setPassword("");
@@ -29,16 +26,22 @@ const Login = () => {
   return (
     <div className='flex justify-center items-center  h-screen w-screen'>
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(handleSubmitForm)}
         className='bg-white p-20 px-28 rounded-lg shadow-md shadow-slate-300'
       >
         <h2 className='text-2xl font-extrabold text-gray-800 mb-6'>Log In</h2>
-
         <div className='mb-4'>
           <label htmlFor='email' className='block text-gray-700 font-bold mb-2'>
             Email
           </label>
           <input
+            {...register("email", {
+              required: "Email is required",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Invalid email address",
+              },
+            })}
             type='email'
             name='email'
             id='email'
@@ -55,6 +58,22 @@ const Login = () => {
             Password
           </label>
           <input
+            {...register("password", {
+              required: "Password is required",
+              minLength: {
+                value: 8,
+                message: "Password must be at least 8 characters long",
+              },
+              maxLength: {
+                value: 20,
+                message: "Password must not exceed 20 characters",
+              },
+              pattern: {
+                value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/,
+                message:
+                  "Password must contain at least one uppercase letter, one lowercase letter, and one number",
+              },
+            })}
             type='password'
             name='password'
             id='password'
