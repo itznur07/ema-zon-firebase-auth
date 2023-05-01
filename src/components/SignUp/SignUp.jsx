@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../Providers/AuthProviders";
 
 const SignUp = () => {
+  const { signInUserWithEmailPassword } = useContext(AuthContext);
+
   // Validation With React Hook Form
   const { register, handleSubmit, error } = useForm();
 
@@ -22,7 +25,8 @@ const SignUp = () => {
     setPassword(event.target.value);
   };
 
-  const handleSubmitForm = ({ name, email, password }) => {
+  const handleSubmitForm = ({ email, password }) => {
+    signInUserWithEmailPassword(email, password);
     setName("");
     setEmail("");
     setPassword("");
