@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../Providers/AuthProviders";
 
 const SignUp = () => {
-  const { signInUserWithEmailPassword } = useContext(AuthContext);
+  const { signUpUserWithEmailPassword, signUpUserWithGoogle } =
+    useContext(AuthContext);
 
   // Validation With React Hook Form
   const { register, handleSubmit, error } = useForm();
@@ -26,7 +27,14 @@ const SignUp = () => {
   };
 
   const handleSubmitForm = ({ email, password }) => {
-    signInUserWithEmailPassword(email, password);
+    signUpUserWithEmailPassword(email, password)
+      .then((result) => {
+        alert("Account Created Sucessfully!");
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+      
     setName("");
     setEmail("");
     setPassword("");
@@ -114,7 +122,7 @@ const SignUp = () => {
           Signup
         </button>
         <br />
-        <span className='text-xl '>
+        <span className='text-md'>
           already have an account?{" "}
           <Link to='/login' className='text-blue-500'>
             Login
@@ -123,6 +131,7 @@ const SignUp = () => {
         <br />
         <a
           type='submit'
+          onClick={signUpUserWithGoogle}
           className='bg-red-500 hover:bg-blue-700 text-white font-bold py-2 my-3 px-4 w-full rounded focus:outline-none focus:shadow-outline text-center cursor-pointer'
         >
           Continue with Google

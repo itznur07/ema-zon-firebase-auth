@@ -1,11 +1,27 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../Providers/AuthProviders";
 
 const Login = () => {
+  const {
+    logInUserWithEmailPassword,
+    logInUserWithGoogle,
+    ForgetPassword,
+    loading,
+  } = useContext(AuthContext);
+
+  // Navigation Setup
+  const navigate = useNavigate();
+  const location = useLocation();
+  console.log(location);
+
+  const from = location?.state?.from.pathname || "/";
+  console.log(from);
+
   // Validation With React Hook Form
   const { register, handleSubmit, error } = useForm();
-
+  const [show, setShow] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -17,10 +33,23 @@ const Login = () => {
     setPassword(event.target.value);
   };
 
-  const handleSubmitForm = (data) => {
-    setName("");
+  const handleSubmitForm = ({ email, password }) => {
+    logInUserWithEmailPassword(email, password)
+      .then(() => {
+        setLoading(true);
+        alert("login sucessfully");
+        navigate(from, { replace: true });
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+
     setEmail("");
     setPassword("");
+  };
+
+  const handleForgetPassword = (email) => {
+    ForgetPassword(email);
   };
 
   return (
@@ -74,14 +103,32 @@ const Login = () => {
                   "Password must contain at least one uppercase letter, one lowercase letter, and one number",
               },
             })}
-            type='password'
+            type={show ? "text" : "password"}
             name='password'
             id='password'
             className='w-full border rounded-lg py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
             value={password}
             onChange={handlePasswordChange}
           />
+          {show ? (
+            <span className='cursor-pointer' onClick={() => setShow(false)}>
+              Hide
+            </span>
+          ) : (
+            <span className='cursor-pointer' onClick={() => setShow(true)}>
+              Show
+            </span>
+          )}
         </div>
+        <span className='text-sm mb-4'>
+          Forget password?{" "}
+          <span
+            className='text-blue-500 cursor-pointer'
+            onClick={() => handleForgetPassword(email)}
+          >
+            reset
+          </span>
+        </span>
         <button
           type='submit'
           className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 my-3 px-4 w-full rounded focus:outline-none focus:shadow-outline'
@@ -89,7 +136,7 @@ const Login = () => {
           Login
         </button>
         <br />
-        <span className='text-xl '>
+        <span className='text-md'>
           New here?{" "}
           <Link to='/signup' className='text-blue-500'>
             Signup
@@ -97,6 +144,7 @@ const Login = () => {
         </span>
         <br />
         <a
+          onClick={logInUserWithGoogle}
           type='submit'
           className='bg-red-500 hover:bg-blue-700 text-white font-bold py-2 my-3 px-4 w-full rounded focus:outline-none focus:shadow-outline text-center cursor-pointer'
         >
